@@ -6,7 +6,13 @@ import (
 )
 
 type Numeric interface {
-	int8 | int16 | int32 | int64 | float32 | float64
+	~int8 | int16 | int32 | int64 | float32 | float64
+}
+
+type Smallint int8
+
+func doubler[T Numeric](value T) T {
+	return value * 2
 }
 
 func filterPositive[T Numeric](items []T) []T {
@@ -31,18 +37,15 @@ func filter[T any](items []T, fx func(T) bool) []T {
 
 func main() {
 	strings := []string{"My", "name", "is", "Blessed", "Sibanda"}
-	strings = filter[string](strings, func(s string) bool {
+	strings = filter(strings, func(s string) bool {
 		return unicode.IsUpper(rune(s[0]))
 	})
 	fmt.Println(strings)
 
 	// Filter a slice of integers
 	ints := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
-	ints = filter[int](ints, func(i int) bool {
-		if i%3 == 0 {
-			return true
-		}
-		return false
+	ints = filter(ints, func(i int) bool {
+		return i%3 == 0
 	})
 	fmt.Println(ints)
 
@@ -53,4 +56,7 @@ func main() {
 	floats := []float32{-4.5, -3.5, -2.5, -1.5, 0, 0.5, 1.5, 2.5, 3.5, 4.5}
 	floats = filterPositive(floats)
 	fmt.Println(floats)
+
+	var four Smallint = 4
+	fmt.Println(doubler(four))
 }
