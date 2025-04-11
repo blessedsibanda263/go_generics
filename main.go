@@ -3,19 +3,17 @@ package main
 import (
 	"fmt"
 	"unicode"
-)
 
-type Numeric interface {
-	~int8 | int16 | int32 | int64 | float32 | float64
-}
+	"golang.org/x/exp/constraints"
+)
 
 type Smallint int8
 
-func doubler[T Numeric](value T) T {
+func doubler[T constraints.Integer](value T) T {
 	return value * 2
 }
 
-func filterPositive[T Numeric](items []T) []T {
+func filterPositive[T constraints.Integer | constraints.Float](items []T) []T {
 	var filtered []T
 	for _, v := range items {
 		if v > 0 {
